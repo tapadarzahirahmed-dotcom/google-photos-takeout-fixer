@@ -22,6 +22,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
@@ -41,6 +43,10 @@ class TakeoutRepositoryImpl @Inject constructor(
 
     private val scannedItems = CopyOnWriteArrayList<TakeoutItem>()
     private var rootFolderNode: FolderNode? = null
+    
+    // Cache for output directories to avoid expensive findFile calls and race conditions
+    private val directoryCache = ConcurrentHashMap<List<String>, DocumentFile>()
+    private val directoryLock = Mutex()
 
     override fun scanFolder(rootUri: Uri): Flow<ScanProgress> = flow {
         Log.e("TakeoutScan", "!!! STARTING OPTIMIZED PARALLEL SCAN !!!")
@@ -167,6 +173,9 @@ class TakeoutRepositoryImpl @Inject constructor(
         val rootOutputDir = options.outputFolderUri?.let { uri ->
             DocumentFile.fromTreeUri(context, uri)
         }
+        
+        // Clear cache for a new run
+        directoryCache.clear()
 
         val total = items.size
         val processedCount = AtomicInteger(0)
@@ -176,7 +185,11 @@ class TakeoutRepositoryImpl @Inject constructor(
             items.forEach { item ->
                 launch(Dispatchers.IO) {
                     semaphore.withPermit {
-                        processSingleFixInternal(item, options, rootOutputDir)
+                        try {
+                            processSingleFixInternal(item, options, rootOutputDir)
+                        } catch (e: Exception) {
+                            Log.e("TakeoutRepository", "Error processing ${item.name}", e)
+                        }
                         val current = processedCount.incrementAndGet()
                         send(FixProgress(total, current, item.name))
                     }
@@ -187,18 +200,27 @@ class TakeoutRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
 
     private suspend fun processSingleFixInternal(item: TakeoutItem, options: FixOptions, rootOutputDir: DocumentFile?) {
-        if (item.jsonUri == null) return
+        if (item.jsonUri == null) {
+            Log.d("TakeoutRepository", "Skipping ${item.name} - No JSON metadata")
+            return
+        }
         
         val metadata = jsonParser.parse(item.jsonUri)
         val timestamp = metadata?.photoTakenTime ?: metadata?.creationTime
         
         if (timestamp != null && !options.dryRun) {
-            val targetUri = if (rootOutputDir != null) {
+            val targetUri: Uri? = if (rootOutputDir != null) {
                 val targetDir = ensureDirectoryExists(rootOutputDir, item.relativePath)
-                val newFile = targetDir?.createFile(
-                    if (item.type == ItemType.VIDEO) "video/mp4" else "image/jpeg",
-                    item.name
-                )
+                if (targetDir == null) {
+                    Log.e("TakeoutRepository", "Failed to create directory for ${item.relativePath}")
+                    return
+                }
+
+                // Get actual MIME type or fallback to extension-based guess
+                val mimeType = context.contentResolver.getType(item.fileUri) 
+                    ?: if (item.type == ItemType.VIDEO) "video/mp4" else "image/jpeg"
+
+                val newFile = targetDir.createFile(mimeType, item.name)
                 
                 if (newFile != null) {
                     context.contentResolver.openInputStream(item.fileUri)?.use { input ->
@@ -207,10 +229,16 @@ class TakeoutRepositoryImpl @Inject constructor(
                         }
                     }
                     newFile.uri
-                } else item.fileUri
+                } else {
+                    Log.e("TakeoutRepository", "Failed to create file: ${item.name} in ${targetDir.name}")
+                    null
+                }
             } else {
+                // Warning: editing in-place might be restricted on modern Android without permission
                 item.fileUri
             }
+
+            if (targetUri == null) return
 
             if (item.type == ItemType.IMAGE) {
                 exifToolManager.updateMetadata(targetUri, timestamp, metadata?.description ?: metadata?.title)
@@ -221,25 +249,46 @@ class TakeoutRepositoryImpl @Inject constructor(
             } else if (item.type == ItemType.VIDEO) {
                 ffmpegManager.updateVideoMetadata(targetUri, timestamp, metadata?.description ?: metadata?.title)
             }
+        } else if (timestamp == null) {
+            Log.w("TakeoutRepository", "No timestamp found for ${item.name}")
         }
     }
 
-    private fun ensureDirectoryExists(root: DocumentFile, path: List<String>): DocumentFile? {
-        var current = root
-        path.forEach { folderName ->
-            // Use a more robust check for existing directory
-            val existing = current.findFile(folderName)
-            if (existing != null && existing.isDirectory) {
-                current = existing
-            } else if (existing != null && !existing.isDirectory) {
-                // Handle case where a file exists with the same name as our intended folder
-                // This is rare in Takeout but possible. We append a suffix.
-                current = current.createDirectory("${folderName}_folder") ?: return null
-            } else {
-                current = current.createDirectory(folderName) ?: return null
+    private suspend fun ensureDirectoryExists(root: DocumentFile, path: List<String>): DocumentFile? {
+        if (path.isEmpty()) return root
+        
+        // Check cache first (fast path)
+        directoryCache[path]?.let { return it }
+
+        // Synchronize to prevent duplicate directory creation (slow path)
+        return directoryLock.withLock {
+            // Re-check cache after acquiring lock
+            directoryCache[path]?.let { return@withLock it }
+
+            var current = root
+            val currentPath = mutableListOf<String>()
+            
+            for (folderName in path) {
+                currentPath.add(folderName)
+                val cached = directoryCache[currentPath.toList()]
+                if (cached != null) {
+                    current = cached
+                    continue
+                }
+
+                val existing = current.findFile(folderName)
+                if (existing != null && existing.isDirectory) {
+                    current = existing
+                } else if (existing != null) {
+                    // File with same name exists, create directory with unique name
+                    current = current.createDirectory("${folderName}_folder") ?: return@withLock null
+                } else {
+                    current = current.createDirectory(folderName) ?: return@withLock null
+                }
+                directoryCache[currentPath.toList()] = current
             }
+            current
         }
-        return current
     }
 
     override suspend fun exportLog(uri: Uri, log: String) = withContext(Dispatchers.IO) {

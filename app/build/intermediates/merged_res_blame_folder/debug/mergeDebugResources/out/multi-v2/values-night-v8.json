@@ -4,7 +4,7 @@
             "outputFile": "com.example.takeoutfixer.app-mergeDebugResources-66:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\zahir\\.gradle\\caches\\transforms-4\\8cca285c0718d65c0b70885b7b87c69b\\transformed\\jetified-core-splashscreen-1.0.1\\res\\values-night-v8\\values-night-v8.xml",
+                    "source": "C:\\Users\\zahir\\.gradle\\caches\\8.13\\transforms\\ae9f6cdd1b551fee15e9e0f12143231f\\transformed\\jetified-core-splashscreen-1.0.1\\res\\values-night-v8\\values-night-v8.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

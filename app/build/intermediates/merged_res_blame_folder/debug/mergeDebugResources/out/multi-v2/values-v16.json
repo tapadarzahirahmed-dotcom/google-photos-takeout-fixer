@@ -4,7 +4,7 @@
             "outputFile": "com.example.takeoutfixer.app-mergeDebugResources-66:/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\zahir\\.gradle\\caches\\transforms-4\\1afed161c2b22fc4e4fce2f2d880ab07\\transformed\\core-1.12.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\zahir\\.gradle\\caches\\8.13\\transforms\\8bcadfc9785106c6db026090039a7bc0\\transformed\\core-1.12.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
