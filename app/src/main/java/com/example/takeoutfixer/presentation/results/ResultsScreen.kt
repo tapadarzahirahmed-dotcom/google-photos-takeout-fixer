@@ -22,8 +22,8 @@ fun ResultsScreen(
     val items by viewModel.items.collectAsState()
     val total = items.size
     val fixed = items.count { it.jsonUri != null }
-    val skipped = total - fixed // Files without JSON or where fixes couldn't be applied
-    val failed = 0 // Placeholder for actual runtime errors
+    val skipped = total - fixed
+    val failed = 0
 
     Scaffold(
         topBar = { 
@@ -53,41 +53,42 @@ fun ResultsScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                ),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                    ),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                 ) {
-                    Text(
-                        text = "Processing Complete!",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    
-                    SummaryRowItem("Total Files", "$total")
-                    SummaryRowItem("Fixed Successfully", "$fixed", color = MaterialTheme.colorScheme.primary)
-                    SummaryRowItem("Files Skipped", "$skipped", color = MaterialTheme.colorScheme.outline)
-                    SummaryRowItem("Failed", "$failed", color = MaterialTheme.colorScheme.error)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Processing Complete!",
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        
+                        SummaryRowItem("Total Files", total.toString())
+                        SummaryRowItem("Fixed Successfully", fixed.toString(), color = MaterialTheme.colorScheme.primary)
+                        SummaryRowItem("Files Skipped", skipped.toString(), color = MaterialTheme.colorScheme.outline)
+                        SummaryRowItem("Failed", failed.toString(), color = MaterialTheme.colorScheme.error)
+                    }
                 }
-            }
-            
-            Spacer(modifier = Modifier.height(48.dp))
-            
-            Button(
-                onClick = onNavigateToHome,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Return Home")
+                
+                Spacer(modifier = Modifier.height(48.dp))
+                
+                Button(
+                    onClick = onNavigateToHome,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Return Home")
+                }
             }
         }
     }

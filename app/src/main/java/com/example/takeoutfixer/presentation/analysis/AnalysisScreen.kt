@@ -1,6 +1,5 @@
 package com.example.takeoutfixer.presentation.analysis
 
-import android.text.format.Formatter
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -18,7 +17,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +35,6 @@ fun AnalysisScreen(
 ) {
     val items by viewModel.items.collectAsState()
     val folderStructure by viewModel.folderStructure.collectAsState()
-    val context = LocalContext.current
     
     val totalMediaSize = items.sumOf { it.size }
     val totalJsonSize = items.sumOf { it.jsonSize }
@@ -73,7 +70,7 @@ fun AnalysisScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .widthIn(max = 800.dp) // Slightly wider for folder tree view
+                    .widthIn(max = 800.dp)
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -81,106 +78,107 @@ fun AnalysisScreen(
                         .fillMaxWidth(),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                item {
-                    Text(
-                        "Summary",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            SummaryRow("Overall Total Items", "${items.size}")
-                            SummaryRow("Overall Total Size", formatPreciseSize(overallTotalSize))
-                            
-                            HorizontalDivider(
-                                modifier = Modifier.padding(vertical = 12.dp),
-                                color = MaterialTheme.colorScheme.outlineVariant
-                            )
-                            
-                            Text("Images", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                            SummaryRow("Total Images", "${images.size}")
-                            SummaryRow("Total Image Size", formatPreciseSize(totalImageSize))
-                            SummaryRow("JSON Matches", "$imageMatched")
-                            SummaryRow("Missing JSON", "$imageUnmatched", color = MaterialTheme.colorScheme.error)
-
-                            Spacer(modifier = Modifier.height(16.dp))
-                            Text("Videos", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
-                            SummaryRow("Total Videos", "${videos.size}")
-                            SummaryRow("Total Video Size", formatPreciseSize(totalVideoSize))
-                            SummaryRow("JSON Matches", "$videoMatched")
-                            SummaryRow("Missing JSON", "$videoUnmatched", color = MaterialTheme.colorScheme.error)
-                        }
-                    }
-                    
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text(
-                        "Takeout Folder Structure",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(12.dp))
-                }
-
-                item {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        ),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(12.dp)
-                                .horizontalScroll(rememberScrollState())
+                    item {
+                        Text(
+                            "Summary",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
                         ) {
-                            folderStructure?.let { root ->
-                                Column {
-                                    FolderTreeView(root, 0)
-                                }
-                            } ?: Box(
-                                modifier = Modifier.fillMaxWidth().padding(32.dp),
-                                contentAlignment = Alignment.Center
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                SummaryRow("Overall Total Items", "${items.size}")
+                                SummaryRow("Overall Total Size", formatPreciseSize(overallTotalSize))
+                                
+                                HorizontalDivider(
+                                    modifier = Modifier.padding(vertical = 12.dp),
+                                    color = MaterialTheme.colorScheme.outlineVariant
+                                )
+                                
+                                Text("Images", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                SummaryRow("Total Images", "${images.size}")
+                                SummaryRow("Total Image Size", formatPreciseSize(totalImageSize))
+                                SummaryRow("JSON Matches", "$imageMatched")
+                                SummaryRow("Missing JSON", "$imageUnmatched", color = MaterialTheme.colorScheme.error)
+
+                                Spacer(modifier = Modifier.height(16.dp))
+                                Text("Videos", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                                SummaryRow("Total Videos", "${videos.size}")
+                                SummaryRow("Total Video Size", formatPreciseSize(totalVideoSize))
+                                SummaryRow("JSON Matches", "$videoMatched")
+                                SummaryRow("Missing JSON", "$videoUnmatched", color = MaterialTheme.colorScheme.error)
+                            }
+                        }
+                        
+                        Spacer(modifier = Modifier.height(32.dp))
+                        Text(
+                            "Takeout Folder Structure",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                    }
+
+                    item {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp)
+                                    .horizontalScroll(rememberScrollState())
                             ) {
-                                CircularProgressIndicator()
+                                folderStructure?.let { root ->
+                                    Column {
+                                        FolderTreeView(root, 0)
+                                    }
+                                } ?: Box(
+                                    modifier = Modifier.fillMaxWidth().padding(32.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
                             }
                         }
                     }
                 }
-            }
-            
-            // Bottom Action Buttons
-            Surface(
-                tonalElevation = 8.dp,
-                shadowElevation = 8.dp
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Button(
-                        onClick = onNavigateToPreview,
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
-                    ) {
-                        Text("Preview Fixes")
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(
-                        onClick = onNavigateToProcessing,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text("Apply Fixes")
+                
+                // Bottom Action Buttons
+                Surface(
+                    tonalElevation = 8.dp,
+                    shadowElevation = 8.dp
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Button(
+                            onClick = onNavigateToPreview,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                        ) {
+                            Text("Preview Fixes")
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = onNavigateToProcessing,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Apply Fixes")
+                        }
                     }
                 }
             }
@@ -190,7 +188,7 @@ fun AnalysisScreen(
 
 @Composable
 private fun FolderTreeView(node: FolderNode, depth: Int) {
-    var isExpanded by remember { mutableStateOf(depth < 1) } // Expand first level by default
+    var isExpanded by remember { mutableStateOf(depth < 1) }
 
     Column(modifier = Modifier.padding(start = (if (depth > 0) 12 else 0).dp)) {
         Row(
@@ -200,7 +198,6 @@ private fun FolderTreeView(node: FolderNode, depth: Int) {
                 .padding(vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Expansion arrow (Only for directories)
             if (node.isDirectory) {
                 Icon(
                     imageVector = if (isExpanded) Icons.Default.KeyboardArrowDown else Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -209,13 +206,11 @@ private fun FolderTreeView(node: FolderNode, depth: Int) {
                     tint = MaterialTheme.colorScheme.primary
                 )
             } else {
-                // Spacer to align files with expanded folders
                 Spacer(modifier = Modifier.width(20.dp))
             }
             
             Spacer(modifier = Modifier.width(4.dp))
             
-            // Single Item Icon (Folder, Photo, Video, or File)
             Icon(
                 imageVector = when {
                     node.isDirectory -> Icons.Default.Folder
