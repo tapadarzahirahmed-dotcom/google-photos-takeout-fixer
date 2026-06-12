@@ -32,6 +32,28 @@ This app is free to use. If it has made your day a little easier, you can suppor
 - **Razorpay:** [Pay via Razorpay](https://razorpay.me/@zahir)
 - **UPI:** `zahirahmedt-1@okicici`
 
+## 🛠️ How to Build
+To build the app yourself, follow these steps:
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/tapadarzahirahmed-dotcom/google-photos-takeout-fixer.git
+cd google-photos-takeout-fixer
+```
+
+### 2. Build via Android Studio (Recommended)
+- Open Android Studio and select **Open**.
+- Navigate to the cloned folder and click **OK**.
+- Wait for Gradle to sync.
+- Click the **Run** button (green play icon) to install it on your device/emulator.
+
+### 3. Build via Command Line
+- **Generate Debug APK:**
+  ```bash
+  ./gradlew assembleDebug
+  ```
+- The APK will be available at: `app/build/outputs/apk/debug/app-debug.apk`
+
 ## 👤 Created By
 **Zahir**
 - [LinkedIn](https://www.linkedin.com/in/zahir49)
