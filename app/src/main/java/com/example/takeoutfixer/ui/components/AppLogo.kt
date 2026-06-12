@@ -1,0 +1,32 @@
+package com.example.takeoutfixer.ui.components
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import com.example.takeoutfixer.R
+
+@Composable
+fun AppLogo(size: Dp = 80.dp) {
+    val isDark = isSystemInDarkTheme()
+    val logoColor = if (isDark) androidx.compose.ui.graphics.Color.White else androidx.compose.ui.graphics.Color.Black
+
+    Box(
+        modifier = Modifier.size(size),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentDescription = "App Logo",
+            modifier = Modifier.size(size),
+            colorFilter = ColorFilter.tint(logoColor)
+        )
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.example.takeoutfixer.app-mergeDebugResources-66:/values-v23/values-v23.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\zahir\\.gradle\\caches\\transforms-4\\75322a92445121681ece8921845a9277\\transformed\\work-runtime-2.9.0\\res\\values-v23\\values-v23.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,121",
+                        "endColumns": "65,62",
+                        "endOffsets": "116,179"
+                    }
+                }
+            ]
+        }
+    ]
+}

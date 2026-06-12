@@ -1,0 +1,30 @@
+<project version="4">
+  <component name="MarkdownArtifactFilesPersistentStateV2">
+    <knownArtifactFiles>
+      <entry virtualFileUrl="file://$USER_HOME$/AppData/Local/Google/AndroidStudio2025.3.4/projects/new folder.c6a033f6/.artifacts/20260611-222953-8fcd329a-bb61-4da7-917c-a41d09e36b43/implementation_plan.artifact.md">
+        <fileState commentingSessionTitle="Implementation Plan" lastModifiedTimeUtc="2026-06-11T17:00:00Z" />
+      </entry>
+      <entry virtualFileUrl="file://$USER_HOME$/AppData/Local/Google/AndroidStudio2025.3.4/projects/new folder.c6a033f6/.artifacts/20260611-222953-8fcd329a-bb61-4da7-917c-a41d09e36b43/task.artifact.md">
+        <fileState commentingSessionTitle="Task List" lastModifiedTimeUtc="2026-06-11T17:00:00Z" />
+      </entry>
+      <entry virtualFileUrl="file://$USER_HOME$/AppData/Local/Google/AndroidStudio2025.3.4/projects/new folder.c6a033f6/.artifacts/20260611-222953-8fcd329a-bb61-4da7-917c-a41d09e36b43/walkthrough.artifact.md">
+        <fileState commentingSessionTitle="Walkthrough" lastModifiedTimeUtc="2026-06-11T17:00:00Z" />
+      </entry>
+    </knownArtifactFiles>
+  </component>
+  <component name="RestoreUpdateTree"><![CDATA[{}]]></component>
+  <component name="StoredSessionsInfoStore">
+    <option name="sessions">
+      <list>
+        <SessionInfoState>
+          <option name="id" value="20260611-222953-8fcd329a-bb61-4da7-917c-a41d09e36b43" />
+          <option name="lastUpdateTimestamp" value="1781197705935" />
+          <option name="responseMode" value="Agent" />
+          <option name="title" value="You are a senior Android architect and staff-level Kotlin engineer.&#10;&#10;Build a" />
+          <option name="totalTokenCount" value="33347" />
+          <option name="user" value="tapadarzahirahmed@gmail.com" />
+        </SessionInfoState>
+      </list>
+    </option>
+  </component>
+</project>

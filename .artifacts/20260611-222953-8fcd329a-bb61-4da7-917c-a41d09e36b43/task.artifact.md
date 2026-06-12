@@ -1,0 +1,30 @@
+# Tasks
+
+- [/] Project Setup
+    - [ ] Root build.gradle.kts and settings.gradle.kts
+    - [ ] App build.gradle.kts
+    - [ ] AndroidManifest.xml
+    - [ ] Proguard rules
+- [ ] Domain Layer
+    - [ ] Models
+    - [ ] Repository Interfaces
+    - [ ] Use Cases
+- [ ] Data Layer
+    - [ ] Repository Implementations
+    - [ ] JSON Parsers
+    - [ ] File Scanner
+    - [ ] Metadata Engines (ExifTool/FFmpeg Wrappers)
+- [ ] Workers and Background Processing
+    - [ ] Scan Worker
+    - [ ] Fix Worker
+- [ ] Dependency Injection (Hilt)
+- [ ] Presentation Layer
+    - [ ] Theme and UI Components
+    - [ ] Navigation
+    - [ ] Home Screen
+    - [ ] Scan Screen
+    - [ ] Analysis Screen
+    - [ ] Preview Screen
+    - [ ] Processing Screen
+    - [ ] Results Screen
+- [ ] Verification and Final Polish
