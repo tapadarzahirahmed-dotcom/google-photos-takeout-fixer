@@ -7,6 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.HelpOutline
@@ -36,6 +38,7 @@ fun HomeScreen(
     val selectedUri by viewModel.selectedFolderUri.collectAsState()
     val outputUri by viewModel.outputFolderUri.collectAsState()
     var showInstructions by remember { mutableStateOf(false) }
+    var showAbout by remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
     val context = LocalContext.current
 
@@ -60,6 +63,44 @@ fun HomeScreen(
         contract = ActivityResultContracts.OpenDocumentTree()
     ) { uri ->
         uri?.let { viewModel.onOutputFolderSelected(it) }
+    }
+
+    if (showAbout) {
+        AlertDialog(
+            onDismissRequest = { showAbout = false },
+            icon = { Icon(Icons.Default.Info, contentDescription = null) },
+            title = { Text("About Google Photos Takeout Fixer") },
+            text = {
+                val scrollState = rememberScrollState()
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
+                    Text(
+                        text = "A lightweight, fast, and secure Android utility to restore metadata (Date Taken, GPS, Descriptions) to photos and videos exported via Google Takeout.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text("🌟 Features", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    FeatureItem("Parallel Scanning", "High-speed O(N) scanning using Coroutines to handle thousands of files instantly.")
+                    FeatureItem("Robust JSON Matching", "Handles Google Takeout's inconsistent naming, suffixes, and filename truncations.")
+                    FeatureItem("Comprehensive Metadata Fixes", "")
+                    Column(modifier = Modifier.padding(start = 12.dp)) {
+                        Text("• Images: ", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
+                        Text("Restores Date Taken, GPS (including Altitude), and Captions/Descriptions using androidx.exifinterface.", style = MaterialTheme.typography.bodySmall)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text("• Videos: ", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.bodySmall)
+                        Text("Restores Creation Time and Descriptions using FFmpeg without re-encoding (no quality loss).", style = MaterialTheme.typography.bodySmall)
+                    }
+                    FeatureItem("Safety First", "Replicates original folder structures in a dedicated output directory to keep your originals untouched.")
+                    FeatureItem("Material 3 UI", "Clean, responsive interface with Dark Mode support and dynamic coloring.")
+                    FeatureItem("Social Connectivity", "Integrated links to LinkedIn and GitHub directly in the app.")
+                    FeatureItem("Real-time Progress", "System notifications and in-app progress tracking.")
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showAbout = false }) {
+                    Text("Close")
+                }
+            }
+        )
     }
 
     if (showInstructions) {
@@ -101,6 +142,9 @@ fun HomeScreen(
                             painter = painterResource(id = R.drawable.ic_github),
                             contentDescription = "GitHub"
                         )
+                    }
+                    IconButton(onClick = { showAbout = true }) {
+                        Icon(Icons.Default.Info, contentDescription = "About")
                     }
                     IconButton(onClick = { showInstructions = true }) {
                         Icon(Icons.Default.HelpOutline, contentDescription = "How to use")
@@ -226,6 +270,25 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun FeatureItem(title: String, description: String) {
+    Column(modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(
+            text = "• $title",
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+        if (description.isNotEmpty()) {
+            Text(
+                text = description,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier.padding(start = 12.dp)
+            )
         }
     }
 }
