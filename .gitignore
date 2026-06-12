@@ -1,5 +1,9 @@
 /.idea/
 .artifacts/
+/history-storage/
+/indexingStamp/
+/project-model-cache/
+/cache-state.xml
 *.iml
 .gradle
 /local.properties
