@@ -64,17 +64,23 @@ fun AnalysisScreen(
             ) 
         }
     ) { padding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(16.dp)
+                    .fillMaxSize()
+                    .widthIn(max = 800.dp) // Slightly wider for folder tree view
             ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
                 item {
                     Text(
                         "Summary",

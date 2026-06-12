@@ -156,12 +156,16 @@ fun HomeScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding)
+                .padding(padding),
+            contentAlignment = Alignment.TopCenter
         ) {
+            val scrollState = rememberScrollState()
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp),
+                    .verticalScroll(scrollState)
+                    .padding(horizontal = 16.dp)
+                    .widthIn(max = 600.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
@@ -170,7 +174,8 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = "Google Photos Takeout Fixer",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = "Created By - Zahir",
@@ -220,53 +225,55 @@ fun HomeScreen(
                         Text("Start Scan")
                     }
                 }
-            }
 
-            // Bottom Support Section
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "This app is free to use. If it has made your day a little easier, you can support future development",
-                    style = MaterialTheme.typography.labelSmall,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(horizontal = 32.dp),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                
-                Icon(
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = null,
-                    tint = Color.Red,
+                Spacer(modifier = Modifier.height(48.dp))
+
+                // Support Section (now inside the scrollable column for small height windows)
+                Column(
                     modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .size(24.dp * scale)
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    TextButton(onClick = { uriHandler.openUri("https://razorpay.me/@zahir") }) {
-                        Text("Razorpay")
-                    }
-                    
                     Text(
-                        "|",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.outline
+                        text = "This app is free to use. If it has made your day a little easier, you can support future development",
+                        style = MaterialTheme.typography.labelSmall,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 32.dp),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     
-                    TextButton(onClick = {
-                        val upiUri = Uri.parse("upi://pay?pa=zahirahmedt-1@okicici&pn=Zahir+Ahmed&cu=INR")
-                        val intent = Intent(Intent.ACTION_VIEW, upiUri)
-                        val chooser = Intent.createChooser(intent, "Pay with...")
-                        context.startActivity(chooser)
-                    }) {
-                        Text("UPI")
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                        tint = Color.Red,
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .size(24.dp * scale)
+                    )
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        TextButton(onClick = { uriHandler.openUri("https://razorpay.me/@zahir") }) {
+                            Text("Razorpay")
+                        }
+                        
+                        Text(
+                            "|",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        
+                        TextButton(onClick = {
+                            val upiUri = Uri.parse("upi://pay?pa=zahirahmedt-1@okicici&pn=Zahir+Ahmed&cu=INR")
+                            val intent = Intent(Intent.ACTION_VIEW, upiUri)
+                            val chooser = Intent.createChooser(intent, "Pay with...")
+                            context.startActivity(chooser)
+                        }) {
+                            Text("UPI")
+                        }
                     }
                 }
             }
